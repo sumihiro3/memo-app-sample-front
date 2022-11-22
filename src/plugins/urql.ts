@@ -10,6 +10,7 @@ import { ref } from 'vue'
 const ssrKey = '__URQL_DATA__'
 export default defineNuxtPlugin((nuxt) => {
   const { vueApp } = nuxt
+  const config = useRuntimeConfig()
   const ssr = ssrExchange({
     isClient: process.client,
   })
@@ -24,12 +25,10 @@ export default defineNuxtPlugin((nuxt) => {
     })
   }
   const client = createClient({
-    // TODO 環境変数を利用するように変更
-    url: 'http://localhost:8080/v1/graphql',
+    url: config.GRAPHQL_URL,
     fetchOptions: {
       headers: {
-        // TODO 環境変数を利用するように変更
-        'x-hasura-admin-secret': 'password',
+        'x-hasura-admin-secret': config.HASURA_ADMIN_PASSWORD,
       },
     },
     exchanges: [dedupExchange, ssr, fetchExchange],
